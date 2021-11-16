@@ -3,6 +3,8 @@ stages:
   - deploy
 
 build:
+  variables:
+    NODE_ENV: production
   image: node:latest # Run the job in a `node` docker image
   stage: build
   script:
@@ -13,6 +15,8 @@ build:
       - build/ # Save the build result as an artifact
 
 pages:
+  variables:
+    NODE_ENV: production
   image: alpine:latest
   stage: deploy
   variables:

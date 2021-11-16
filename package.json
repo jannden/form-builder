@@ -9,11 +9,12 @@
     "build": "set NODE_ENV=production&& webpack --config ./webpack.config.js --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "prepare": "npx husky install",
   "husky": {
     "hooks": {
       "pre-commit": "npm test"
     }
-  }
+  },
   "author": "JanNDen",
   "license": "ISC",
   "devDependencies": {
