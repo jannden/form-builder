@@ -42,7 +42,7 @@ module.exports = {
     new ESLintPlugin(eslintOptions),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: "Hello Webpack bundled JavaScript Project",
+      title: "Dynamic Forms",
       template: path.resolve(__dirname, "./src/index.html"),
     }),
     new Dotenv(),
