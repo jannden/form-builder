@@ -8,8 +8,7 @@
     "start": "set NODE_ENV=development&& webpack serve --config ./webpack.config.js --mode development",
     "build": "set NODE_ENV=production&& webpack --config ./webpack.config.js --mode production",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "husky-test": "echo \"Welcome, this is Husky speaking...\"",
-    "prepare": "husky install"
+    "husky-test": "echo \"Welcome, this is Husky speaking...\""
   },
   "author": "JanNDen",
   "license": "ISC",
