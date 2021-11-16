@@ -4,6 +4,11 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
+    <script>
+      // https://github.com/pmmmwh/react-refresh-webpack-plugin/issues/176#issuecomment-683150213
+      window.$RefreshReg$ = () => {};
+      window.$RefreshSig$ = () => () => {};
+    </script>
     <div id="app"></div>
   </body>
 </html>
