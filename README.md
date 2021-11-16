@@ -1,5 +1,7 @@
 # Dynamic Form Builder
 
+[Open live](https://jannden.gitlab.io/form-builder-on-react-starter/)
+
 Build forms with src/formJSON.js.
 
 It supports these standard field types: text input, select, checkbox.
