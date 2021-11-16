@@ -12,7 +12,7 @@
   "prepare": "npx husky install",
   "husky": {
     "hooks": {
-      "pre-commit": "npm test"
+      "pre-commit": "echo \"[Husky] pre-commit\""
     }
   },
   "author": "JanNDen",
