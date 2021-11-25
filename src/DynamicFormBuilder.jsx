@@ -121,6 +121,27 @@ class DynamicFormBuilder extends Component {
     ));
   }
 
+  renderSelect(field, index) {
+    const { fields } = this.state;
+    return (
+      <Form.Group key={index} className="mb-3">
+        <FloatingLabel
+          label={field.required ? `${field.label} *` : field.label}
+        >
+          <Form.Select
+            id={field.id}
+            data-index={index.toString()}
+            required={field.required}
+            value={fields[index].value}
+            onChange={this.handleChange}
+          >
+            {this.renderOption(field.options)}
+          </Form.Select>
+        </FloatingLabel>
+      </Form.Group>
+    );
+  }
+
   renderInput(field, index) {
     const { fields } = this.state;
     return (
@@ -140,27 +161,6 @@ class DynamicFormBuilder extends Component {
         <Form.Control.Feedback type="invalid">
           Please fill out this field in proper format.
         </Form.Control.Feedback>
-      </Form.Group>
-    );
-  }
-
-  renderSelect(field, index) {
-    const { fields } = this.state;
-    return (
-      <Form.Group key={index} className="mb-3">
-        <FloatingLabel
-          label={field.required ? `${field.label} *` : field.label}
-        >
-          <Form.Select
-            id={field.id}
-            data-index={index.toString()}
-            required={field.required}
-            value={fields[index].value}
-            onChange={this.handleChange}
-          >
-            {this.renderOption(field.options)}
-          </Form.Select>
-        </FloatingLabel>
       </Form.Group>
     );
   }
@@ -235,11 +235,11 @@ class DynamicFormBuilder extends Component {
         if (field.type === "text" || field.type === "email") {
           return this.renderInput(field, index);
         }
-        if (field.type === "select") {
-          return this.renderSelect(field, index);
-        }
         if (field.type === "checkbox") {
           return this.renderCheckbox(field, index);
+        }
+        if (field.type === "select") {
+          return this.renderSelect(field, index);
         }
         if (field.type === "textarea") {
           return this.renderTextarea(field, index);
