@@ -4,6 +4,7 @@ const ESLintPlugin = require("eslint-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
+const { webpack } = require("webpack");
 
 const eslintOptions = {
   extensions: ["js", "jsx"],

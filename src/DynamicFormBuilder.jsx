@@ -2,7 +2,9 @@ import React, { Component, createRef } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
-import FloatingLabel from "react-bootstrap/FloatingLabel";
+
+// Form components
+import FormComponents from "./formComponents/FormComponents";
 
 class DynamicFormBuilder extends Component {
   constructor(props) {
@@ -114,144 +116,21 @@ class DynamicFormBuilder extends Component {
     return true;
   }
 
-  renderOption(options) {
-    // This method renders options for a select
-    return options.map((option, index) => (
-      <option key={`option${index + 1}`}>{option.label}</option>
-    ));
-  }
-
-  renderSelect(field, index) {
-    const { fields } = this.state;
-    return (
-      <Form.Group key={index} className="mb-3">
-        <FloatingLabel
-          label={field.required ? `${field.label} *` : field.label}
-        >
-          <Form.Select
-            id={field.id}
-            data-index={index.toString()}
-            required={field.required}
-            value={fields[index].value}
-            onChange={this.handleChange}
-          >
-            {this.renderOption(field.options)}
-          </Form.Select>
-        </FloatingLabel>
-      </Form.Group>
-    );
-  }
-
-  renderInput(field, index) {
-    const { fields } = this.state;
-    return (
-      <Form.Group key={index} className="mb-3">
-        <Form.Label>
-          {field.required ? `${field.label} *` : field.label}
-        </Form.Label>
-        <Form.Control
-          type={field.type}
-          placeholder={field.placeholder}
-          id={field.id}
-          data-index={index.toString()}
-          required={field.required}
-          value={fields[index].value}
-          onChange={this.handleChange}
-        />
-        <Form.Control.Feedback type="invalid">
-          Please fill out this field in proper format.
-        </Form.Control.Feedback>
-      </Form.Group>
-    );
-  }
-
-  renderCheckbox(field, index) {
-    const { fields } = this.state;
-    return (
-      <Form.Group key={index} className="mb-3">
-        <Form.Check
-          id={field.id}
-          type="checkbox"
-          label={field.required ? `${field.label} *` : field.label}
-          data-index={index.toString()}
-          required={field.required}
-          value={fields[index].value}
-          onChange={this.handleChange}
-        />
-      </Form.Group>
-    );
-  }
-
-  renderTextarea(field, index) {
-    const { fields } = this.state;
-    return (
-      <Form.Group key={index} className="mb-3">
-        <FloatingLabel
-          label={field.required ? `${field.label} *` : field.label}
-        >
-          <Form.Control
-            id={field.id}
-            as="textarea"
-            data-index={index.toString()}
-            required={field.required}
-            value={fields[index].value}
-            onChange={this.handleChange}
-            style={{ height: "100px" }}
-          />
-          <Form.Control.Feedback type="invalid">
-            Please fill out this field.
-          </Form.Control.Feedback>
-        </FloatingLabel>
-      </Form.Group>
-    );
-  }
-
-  renderFile(field, index) {
-    return (
-      <Form.Group key={index} className="mb-3">
-        <Form.Label>
-          {field.required ? `${field.label} *` : field.label}
-        </Form.Label>
-        <Form.Control
-          type="file"
-          id={field.id}
-          data-index={index.toString()}
-          required={field.required}
-          onChange={this.handleChange}
-          ref={this.fileInputs[field.id]}
-        />
-        <Form.Control.Feedback type="invalid">
-          Please choose a file.
-        </Form.Control.Feedback>
-      </Form.Group>
-    );
-  }
-
   renderForm() {
     // This method renders all fields of the form
     const { fields } = this.state;
-    const form = fields.map((field, index) => {
+    const form = fields.map((field) => {
       if (this.displayThisField(field)) {
-        if (field.type === "text" || field.type === "email") {
-          return this.renderInput(field, index);
-        }
-        if (field.type === "checkbox") {
-          return this.renderCheckbox(field, index);
-        }
-        if (field.type === "select") {
-          return this.renderSelect(field, index);
-        }
-        if (field.type === "textarea") {
-          return this.renderTextarea(field, index);
-        }
-        if (field.type === "file") {
-          return this.renderFile(field, index);
-        }
+        const capitalizedType =
+          field.type.charAt(0).toUpperCase() + field.type.slice(1);
+        const DesiredComponent = FormComponents[capitalizedType];
         return (
-          <Alert variant="warning">
-            Not rendered:
-            {field.type}
-          </Alert>
+          <DesiredComponent
+            key={field.id}
+            field={field}
+            handleChange={this.handleChange}
+            fileInputs={this.fileInputs}
+          />
         );
       }
       return null;
