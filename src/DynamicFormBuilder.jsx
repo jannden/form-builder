@@ -15,20 +15,20 @@ class DynamicFormBuilder extends Component {
 
     // Set state
     this.state = {
-      // Form validation
-      validated: false,
+      // HTML5 form validation with Bootstrap
+      // This is in addition to the internal validation done in the internalValidation method
+      bootstrapValidated: false,
 
       // Form fields
       fields: props.formJSON[0].fields.map((field) => {
-        // Let's set default value for select (=first option label)
-        // and for checkbox (=false) if those values are missing
+        // We will be adding default validity parameter to each field
         if (field.type === "select" && field.value === "") {
-          // Update state
-          return { ...field, value: field.options[0].label };
+          // Also, we will set the default value for select (=first option label)
+          return { ...field, value: field.options[0].label, validity: true };
         }
         if (field.type === "checkbox" && field.value === "") {
-          // Update state
-          return { ...field, value: false };
+          // and for checkbox (=false) if those values are missing
+          return { ...field, value: false, validity: true };
         }
         if (field.type === "file") {
           // Let's use this mapping for setting Refs as well
@@ -36,23 +36,25 @@ class DynamicFormBuilder extends Component {
             ...this.fileInputs,
             [field.id]: createRef(),
           };
-          // Update state
-          return { ...field, value: "" };
+          return { ...field, value: "", validity: true };
         }
-        return field;
+        return { ...field, validity: true };
       }),
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
 
   handleSubmit(event) {
+    const { fields } = this.state;
+
     // Prevent form submit
     event.preventDefault();
 
-    // Form validation first
+    // HTML5 form validation with Bootstrap
     this.setState((prevState) => ({
-      validated: true,
+      bootstrapValidated: true,
       fields: prevState.fields,
     }));
     if (event.currentTarget.checkValidity() === false) {
@@ -60,8 +62,17 @@ class DynamicFormBuilder extends Component {
       return false;
     }
 
+    // Internal validation
+    const invalidFieldsCount = fields.filter(
+      (field) => field.validity === false
+    ).length;
+    if (invalidFieldsCount !== 0) {
+      console.log("There are invalid fields!");
+      event.stopPropagation();
+      return false;
+    }
+
     // Parsing the final data
-    const { fields } = this.state;
     const result = fields
       .map((field) => {
         if (this.displayThisField(field)) {
@@ -84,7 +95,7 @@ class DynamicFormBuilder extends Component {
     if (event.target.type === "checkbox") {
       value = event.target.checked;
     } else if (event.target.type === "file") {
-      value = this.fileInputs[event.target.id].current.files[0].name
+      value = this.fileInputs[event.target.id].current.files[0]
         ? this.fileInputs[event.target.id].current.files[0].name
         : "";
     } else {
@@ -93,12 +104,76 @@ class DynamicFormBuilder extends Component {
 
     // Update state with new values based on IDs
     this.setState((prevState) => ({
-      validated: prevState.validated,
-      fields: prevState.fields.map((field) =>
-        field.id === event.target.id ? { ...field, value } : field
-      ),
+      bootstrapValidated: prevState.bootstrapValidated,
+      fields: prevState.fields.map((field) => {
+        if (field.id === event.target.id) {
+          // We found the field that is being edited
+
+          // Send updated data
+          return { ...field, value };
+        }
+
+        // If this field is not edited, just return the old data
+        return field;
+      }),
     }));
   }
+
+  handleBlur(event) {
+    // Update state with new validity based on IDs
+    const { value } = event.target;
+    this.setState((prevState) => ({
+      bootstrapValidated: prevState.bootstrapValidated,
+      fields: prevState.fields.map((field) => {
+        if (
+          field.id === event.target.id &&
+          field.required &&
+          this.displayThisField(field)
+        ) {
+          // We found the field that is being edited + which should be validated
+
+          let validity = true;
+          switch (field.type) {
+            case "email":
+              validity = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(value);
+              break;
+            default:
+              validity = value !== "";
+          }
+          // Send updated data
+          return { ...field, value, validity };
+        }
+
+        // If it's not the correct field, just return the old data
+        return field;
+      }),
+    }));
+  }
+
+  /*
+  validateField(fieldName, value) {
+    let fieldValidationErrors = this.state.formErrors;
+    let emailValid = this.state.emailValid;
+    let passwordValid = this.state.passwordValid;
+  
+    switch(fieldName) {
+      case 'email':
+        emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        fieldValidationErrors.email = emailValid ? '' : ' is invalid';
+        break;
+      case 'password':
+        passwordValid = value.length >= 6;
+        fieldValidationErrors.password = passwordValid ? '': ' is too short';
+        break;
+      default:
+        break;
+    }
+    this.setState({formErrors: fieldValidationErrors,
+                    emailValid: emailValid,
+                    passwordValid: passwordValid
+                  }, this.validateForm);
+  }
+*/
 
   displayThisField(field) {
     // This method is for conditional logic of showing an extra field if a checkbox is checked
@@ -118,7 +193,7 @@ class DynamicFormBuilder extends Component {
 
   renderForm() {
     // This method renders all fields of the form
-    const { fields } = this.state;
+    const { fields, internalValidated } = this.state;
     const form = fields.map((field) => {
       if (this.displayThisField(field)) {
         const capitalizedType =
@@ -129,7 +204,9 @@ class DynamicFormBuilder extends Component {
             key={field.id}
             field={field}
             handleChange={this.handleChange}
+            handleBlur={this.handleBlur}
             fileInputs={this.fileInputs}
+            internalValidated={internalValidated}
           />
         );
       }
@@ -140,9 +217,13 @@ class DynamicFormBuilder extends Component {
   }
 
   render() {
-    const { validated } = this.state;
+    const { bootstrapValidated } = this.state;
     return (
-      <Form onSubmit={this.handleSubmit} noValidate validated={validated}>
+      <Form
+        onSubmit={this.handleSubmit}
+        noValidate
+        validated={bootstrapValidated}
+      >
         {this.renderForm()}
         <Button variant="primary" type="submit">
           Submit

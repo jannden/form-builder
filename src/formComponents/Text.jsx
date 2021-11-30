@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 
 class Text extends PureComponent {
   render() {
-    const { field, handleChange } = this.props;
+    const { field, handleChange, handleBlur } = this.props;
     return (
       <Form.Group className="mb-3">
         <Form.Label>
@@ -16,6 +16,8 @@ class Text extends PureComponent {
           required={field.required}
           value={field.value}
           onChange={handleChange}
+          onBlur={handleBlur}
+          isInvalid={field.validity ? "" : "true"}
         />
         <Form.Control.Feedback type="invalid">
           Please fill out this field in proper format.

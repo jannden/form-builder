@@ -4,7 +4,7 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 
 class Textarea extends PureComponent {
   render() {
-    const { field, handleChange } = this.props;
+    const { field, handleChange, handleBlur } = this.props;
     return (
       <Form.Group className="mb-3">
         <FloatingLabel
@@ -16,7 +16,9 @@ class Textarea extends PureComponent {
             required={field.required}
             value={field.value}
             onChange={handleChange}
+            onBlur={handleBlur}
             style={{ height: "100px" }}
+            isInvalid={field.validity ? "" : "true"}
           />
           <Form.Control.Feedback type="invalid">
             Please fill out this field.

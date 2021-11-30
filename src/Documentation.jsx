@@ -26,6 +26,13 @@ class Documentation extends Component {
           field, we will show that field only if a checkbox with{" "}
           <code>id=&quot;subscribe&quot;</code> is checked.
         </p>
+        <h2>New</h2>
+        <p>
+          <strong>Added internal validation.</strong> In order to test it, first
+          turn off the HTMl5 Bootstrap validation by removing the attribute{" "}
+          <code>validated</code> from the <code>Form</code> tag in the{" "}
+          <code>DynamicFormBuilder</code> component.
+        </p>
       </div>
     );
   }

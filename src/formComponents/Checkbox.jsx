@@ -13,6 +13,7 @@ class Checkbox extends PureComponent {
           required={field.required}
           value={field.value}
           onChange={handleChange}
+          isInvalid={field.validity ? "" : "true"}
         />
       </Form.Group>
     );
