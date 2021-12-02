@@ -58,9 +58,22 @@ const formJSON = [
         type: "file",
       },
       {
-        id: "avatar2",
+        id: "multipleAvatars",
+        label: "Do you want a second avatar?",
+        type: "checkbox",
+        value: "",
+      },
+      {
+        id: "secondAvatar",
         label: "Your optional second avatar",
         type: "file",
+        showIfChecked: "multipleAvatars",
+      },
+      {
+        id: "thirdAvatar",
+        label: "Your optional third avatar",
+        type: "file",
+        showIfChecked: "multipleAvatars",
       },
     ],
   },

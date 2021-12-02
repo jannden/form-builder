@@ -1,36 +1,30 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 
-class Select extends PureComponent {
-  renderOption(options) {
-    // This method renders options for a select
-    return options.map((option, index) => (
-      <option key={`option${index + 1}`}>{option.label}</option>
-    ));
-  }
+const renderOption = (options) =>
+  // This function renders options for a select
+  options.map((option, index) => (
+    <option key={`option${index + 1}`}>{option.label}</option>
+  ));
 
-  render() {
-    const { field, handleChange, handleBlur } = this.props;
-    return (
-      <Form.Group className="mb-3">
-        <FloatingLabel
-          label={field.required ? `${field.label} *` : field.label}
+const Select = function Select(props) {
+  const { field, handleChange } = props;
+  return (
+    <Form.Group className="mb-3">
+      <FloatingLabel label={field.required ? `${field.label} *` : field.label}>
+        <Form.Select
+          id={field.id}
+          required={field.required}
+          value={field.value}
+          onChange={handleChange}
+          isInvalid={field.validity ? "" : "true"}
         >
-          <Form.Select
-            id={field.id}
-            required={field.required}
-            value={field.value}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            isInvalid={field.validity ? "" : "true"}
-          >
-            {this.renderOption(field.options)}
-          </Form.Select>
-        </FloatingLabel>
-      </Form.Group>
-    );
-  }
-}
+          {renderOption(field.options)}
+        </Form.Select>
+      </FloatingLabel>
+    </Form.Group>
+  );
+};
 
 export default Select;

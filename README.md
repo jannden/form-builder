@@ -1,6 +1,17 @@
-# Dynamic Form Builder
+# Dynamic Form Builder - Hooks
 
-[Open live](https://jannden.gitlab.io/form-builder-on-react-starter/)
+[Open live](https://jannden.gitlab.io/form-builder-on-react-starter-hooks/)
+
+## New
+
+- Internal validation added (in addition to Bootstrap HTML5). In order to test it, first
+  turn off the HTMl5 Bootstrap validation by removing the attribute validated from the Form tag in the DynamicFormBuilder component.
+- Components are now broken down to individual files
+- Rewritten from class to functional components
+- Using hooks
+- A general module is used to dynamically recall the correct component: ./formComponents/FormComponents.jsx
+
+## Description
 
 Build forms with src/formJSON.js.
 

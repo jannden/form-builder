@@ -8,12 +8,13 @@ import FormComponents from "./formComponents/FormComponents";
 
 const DynamicFormBuilder = function DynamicFormBuilder(props) {
   // This will serve for useRef for file inputs (we don't know how many file inputs will the formJSON require)
-  const fileInputs = React.useRef({});
+  let fileInputs = React.useRef({});
+
+  // HTML5 form validation with Bootstrap (used in addition to the internal validation done in the internalValidation method)
+  const [bootstrapValidated, setBootstrapValidated] = React.useState(false);
 
   // Initialize fields with default values
-  const { formJSON } = props;
-  // const [fields, setFields] = React.useState(formJSON[0].fields);
-
+  const [formJSON] = props;
   const [fields, setFields] = React.useState(() =>
     formJSON[0].fields.map((field) => {
       // We will be adding default validity parameter to each field
@@ -27,8 +28,8 @@ const DynamicFormBuilder = function DynamicFormBuilder(props) {
       }
       if (field.type === "file") {
         // Let's use this mapping for setting Refs as well
-        fileInputs.current = {
-          ...fileInputs.current,
+        fileInputs = {
+          ...fileInputs,
           [field.id]: React.createRef(),
         };
         return { ...field, value: "", validity: true };
@@ -55,31 +56,20 @@ const DynamicFormBuilder = function DynamicFormBuilder(props) {
     [fields]
   );
 
-  const fieldValidity = React.useCallback(
-    (field, newValue) => {
-      const value = typeof newValue === "undefined" ? field.value : newValue;
-      if (field.required && displayThisField(field)) {
-        switch (field.type) {
-          case "email":
-            return /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(value);
-          default:
-            return value !== "";
-        }
-      }
-      return true;
-    },
-    [displayThisField]
-  );
-
   const handleSubmit = React.useCallback(
     (event) => {
       // Prevent form submit
       event.preventDefault();
 
+      // HTML5 form validation with Bootstrap
+      setBootstrapValidated(true);
+      if (event.currentTarget.checkValidity() === false) {
+        console.log("There are invalid fields!");
+        event.stopPropagation();
+        return false;
+      }
+
       // Internal validation
-      setFields(
-        fields.map((field) => ({ ...field, validity: fieldValidity(field) }))
-      );
       const invalidFieldsCount = fields.filter(
         (field) => field.validity === false
       ).length;
@@ -103,7 +93,7 @@ const DynamicFormBuilder = function DynamicFormBuilder(props) {
       console.log(result);
       return false;
     },
-    [displayThisField, fieldValidity, fields]
+    [displayThisField, fields]
   );
 
   const handleChange = React.useCallback(
@@ -115,8 +105,8 @@ const DynamicFormBuilder = function DynamicFormBuilder(props) {
         value = event.target.checked;
       } else if (event.target.type === "file") {
         // For file, we get if from Refs
-        value = fileInputs.current[event.target.id].current.files[0]
-          ? fileInputs.current[event.target.id].current.files[0].name
+        value = fileInputs[event.target.id].current.files[0]
+          ? fileInputs[event.target.id].current.files[0].name
           : "";
       } else {
         // For input["text", "email"], textarea, and select, we get if from event.target.value
@@ -129,14 +119,45 @@ const DynamicFormBuilder = function DynamicFormBuilder(props) {
           if (field.id === event.target.id) {
             // We found the field that is being edited
             // Send updated data
-            return { ...field, value, validity: fieldValidity(field, value) };
+            return { ...field, value };
           }
           // If this field is not edited, just return the old data
           return field;
         })
       );
     },
-    [fieldValidity, fields]
+    [fields, fileInputs]
+  );
+
+  const handleBlur = React.useCallback(
+    (event) => {
+      // We do internal validation on Blur here
+      const { value } = event.target;
+      setFields(
+        fields.map((field) => {
+          if (
+            field.id === event.target.id &&
+            field.required &&
+            displayThisField(field)
+          ) {
+            // We found the field that is being edited and should be validated
+            let validity = true;
+            switch (field.type) {
+              case "email":
+                validity = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(value);
+                break;
+              default:
+                validity = value !== "";
+            }
+            // Send updated data
+            return { ...field, value, validity };
+          }
+          // If it's not the correct field, just return the old data
+          return field;
+        })
+      );
+    },
+    [displayThisField, fields]
   );
 
   const renderForm = () => {
@@ -151,6 +172,7 @@ const DynamicFormBuilder = function DynamicFormBuilder(props) {
             key={field.id}
             field={field}
             handleChange={handleChange}
+            handleBlur={handleBlur}
             fileInputs={fileInputs}
           />
         );
@@ -162,8 +184,8 @@ const DynamicFormBuilder = function DynamicFormBuilder(props) {
   };
 
   return (
-    <Form onSubmit={handleSubmit} noValidate>
-      {renderForm()}
+    <Form onSubmit={handleSubmit} noValidate validated={bootstrapValidated}>
+      {renderForm}
       <Button variant="primary" type="submit">
         Submit
       </Button>
