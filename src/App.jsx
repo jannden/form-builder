@@ -6,25 +6,19 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 // JSON
-import formJSON from "./formJSON";
+import wizardJSON from "./wizardJSON";
 
 // Components
-import Documentation from "./Documentation";
-import DynamicFormBuilder from "./DynamicFormBuilder";
+import PagesBuilder from "./PagesBuilder";
 
 const App = function App() {
   return (
     <div className="App">
       <Container>
-        <Row>
-          <Col>
-            <Documentation />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <h1>Dynamic Form Builder</h1>
-            <DynamicFormBuilder formJSON={formJSON} />
+        <Row className="justify-content-center">
+          <Col lg={6} md={8}>
+            <h3 className="text-center">Dynamic Form Builder</h3>
+            <PagesBuilder wizardJSON={wizardJSON} />
           </Col>
         </Row>
       </Container>

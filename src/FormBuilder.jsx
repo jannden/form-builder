@@ -1,21 +1,21 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
+import Card from "react-bootstrap/Card";
 
 // Form components
 import FormComponents from "./formComponents/FormComponents";
 
-const DynamicFormBuilder = function DynamicFormBuilder(props) {
+const FormBuilder = function FormBuilder(props) {
   // This will serve for useRef for file inputs (we don't know how many file inputs will the formJSON require)
   const fileInputs = React.useRef({});
 
   // Initialize fields with default values
-  const { formJSON } = props;
+  const { pageFields } = props;
   // const [fields, setFields] = React.useState(formJSON[0].fields);
 
   const [fields, setFields] = React.useState(() =>
-    formJSON[0].fields.map((field) => {
+    pageFields.map((field) => {
       // We will be adding default validity parameter to each field
       if (field.type === "select" && field.value === "") {
         // Also, we will set the default value for select (=first option label)
@@ -33,7 +33,7 @@ const DynamicFormBuilder = function DynamicFormBuilder(props) {
         };
         return { ...field, value: "", validity: true };
       }
-      return { ...field, validity: true };
+      return { ...field, validity: true, page: "" };
     })
   );
 
@@ -162,13 +162,12 @@ const DynamicFormBuilder = function DynamicFormBuilder(props) {
   };
 
   return (
-    <Form onSubmit={handleSubmit} noValidate>
-      {renderForm()}
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
+    <Card.Body>
+      <Form onSubmit={handleSubmit} noValidate>
+        {renderForm()}
+      </Form>
+    </Card.Body>
   );
 };
 
-export default DynamicFormBuilder;
+export default FormBuilder;
