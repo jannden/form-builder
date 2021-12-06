@@ -1,9 +1,9 @@
 {
-  "name": "form-builder-on-react-starter",
+  "name": "form-builder-with-step-wizard",
   "version": "1.0.0",
-  "description": "Build forms with src/formJSON.js.",
+  "description": "Build forms with src/wizardJSON.js",
   "main": "./src/index.jsx",
-  "homepage": "https://jannden.gitlab.io/form-builder-on-react-starter",
+  "homepage": "https://jannden.gitlab.io/form-builder-with-step-wizard/",
   "scripts": {
     "start": "set NODE_ENV=development&& webpack serve --config ./webpack.config.js --mode development",
     "build": "set NODE_ENV=production&& webpack --config ./webpack.config.js --mode production",
