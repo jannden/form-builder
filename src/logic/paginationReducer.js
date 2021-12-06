@@ -1,7 +1,6 @@
 const paginationReducer = (state, action) => {
   switch (action.type) {
     case "next":
-      console.log("changing from  ", state.currentPage);
       if (state.currentPage < state.lastPage)
         return { ...state, currentPage: state.currentPage + 1 };
       return { ...state, currentPage: state.lastPage };

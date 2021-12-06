@@ -21,9 +21,9 @@ const wizardJSON = [
             value: "",
           },
           {
-            id: "bday",
+            id: "birthday",
             label: "Birth Date",
-            placeholder: "DD/MM/YYY",
+            placeholder: "DD/MM/YYYY",
             type: "text",
             value: "",
           },
@@ -37,7 +37,7 @@ const wizardJSON = [
             label: "Email",
             required: true,
             placeholder: "Enter your email ...",
-            type: "text",
+            type: "email",
             value: "",
           },
           {
@@ -104,7 +104,7 @@ const wizardJSON = [
               },
             ],
             value: "",
-            // Logic that handles visibility
+            showIfChecked: "subscribe",
           },
         ],
       },

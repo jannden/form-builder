@@ -9,7 +9,7 @@ import Col from "react-bootstrap/Col";
 import wizardJSON from "./wizardJSON";
 
 // Components
-import PagesBuilder from "./PagesBuilder";
+import FormBuilder from "./FormBuilder";
 
 const App = function App() {
   return (
@@ -17,8 +17,8 @@ const App = function App() {
       <Container>
         <Row className="justify-content-center">
           <Col lg={6} md={8}>
-            <h3 className="text-center">Dynamic Form Builder</h3>
-            <PagesBuilder wizardJSON={wizardJSON} />
+            <h3 className="text-center">Dynamic Multi-step Form Builder</h3>
+            <FormBuilder wizardJSON={wizardJSON} />
           </Col>
         </Row>
       </Container>

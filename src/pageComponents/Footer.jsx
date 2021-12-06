@@ -3,15 +3,17 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 
 const Footer = function Footer(props) {
-  const { pagination, dispatchPagination, handleFinish } = props;
+  const { pagination, dispatchPagination, pageValidation } = props;
+
   const handlePreviousPage = React.useCallback(() => {
     dispatchPagination({ type: "previous" });
-    console.log(pagination);
-  }, [dispatchPagination, pagination]);
+  }, [dispatchPagination]);
+
   const handleNextPage = React.useCallback(() => {
-    dispatchPagination({ type: "next" });
-    console.log(pagination);
-  }, [dispatchPagination, pagination]);
+    if (pageValidation(pagination.currentPage))
+      dispatchPagination({ type: "next" });
+  }, [dispatchPagination, pageValidation, pagination.currentPage]);
+
   return (
     <Card.Footer>
       {pagination.currentPage !== 0 && (
@@ -29,7 +31,7 @@ const Footer = function Footer(props) {
         </Button>
       )}
       {pagination.currentPage === pagination.lastPage && (
-        <Button className="float-end" onClick={handleFinish}>
+        <Button type="submit" className="float-end">
           Finish
         </Button>
       )}
