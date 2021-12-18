@@ -1,4 +1,5 @@
 import Checkbox from "./Checkbox";
+import DefaultField from "./DefaultField";
 import Email from "./Email";
 import File from "./File";
 import Select from "./Select";
@@ -7,6 +8,7 @@ import Textarea from "./Textarea";
 
 export default {
   Checkbox,
+  DefaultField,
   Email,
   File,
   Select,

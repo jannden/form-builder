@@ -195,7 +195,10 @@ const FormBuilder = function FormBuilder(props) {
       if (displayThisField(field)) {
         const capitalizedType =
           field.type.charAt(0).toUpperCase() + field.type.slice(1);
-        const DesiredComponent = FormComponents[capitalizedType];
+        let DesiredComponent = FormComponents.DefaultField;
+        if (typeof FormComponents[capitalizedType] !== "undefined") {
+          DesiredComponent = FormComponents[capitalizedType];
+        }
         return (
           <DesiredComponent
             key={field.id}
