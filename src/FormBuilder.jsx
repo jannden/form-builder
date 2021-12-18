@@ -130,7 +130,7 @@ const FormBuilder = function FormBuilder(props) {
       }
 
       // Parsing the final data
-      const result = data
+      const resultArray = data
         .map((page) =>
           page.fields.map((field) => {
             if (displayThisField(field)) {
@@ -141,6 +141,9 @@ const FormBuilder = function FormBuilder(props) {
         )
         .flat()
         .filter((field) => field);
+
+      // Flatten the fields into a single object
+      const result = Object.assign(...resultArray);
 
       // Print the result
       console.log(result);
