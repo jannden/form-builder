@@ -1,9 +1,12 @@
 {
-  "name": "form-builder-with-step-wizard",
+  "name": "form-builder",
   "version": "1.0.0",
   "description": "Build forms with src/wizardJSON.js",
   "main": "./src/index.jsx",
-  "homepage": "https://jannden.gitlab.io/form-builder-with-step-wizard/",
+  "author": "Jan Cibulka",
+  "homepage": "https://jannden.github.io/form-builder/",
+  "repository": "https://github.com/jannden/form-builder/",
+  "license": "ISC",
   "scripts": {
     "start": "set NODE_ENV=development&& webpack serve --config ./webpack.config.js --mode development",
     "build": "set NODE_ENV=production&& webpack --config ./webpack.config.js --mode production",
@@ -11,8 +14,6 @@
     "husky-test": "echo \"Welcome, this is Husky speaking...\"",
     "prepare": "husky install"
   },
-  "author": "JanNDen",
-  "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.0",

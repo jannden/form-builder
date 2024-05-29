@@ -1,6 +1,6 @@
 # Dynamic Form Builder - With Step Wizard
 
-[Open live](https://jannden.gitlab.io/form-builder-with-step-wizard/)
+[Open live](https://jannden.github.io/form-builder/)
 
 ## Description
 
